@@ -22,10 +22,12 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
+	implementation("org.springframework.boot:spring-boot-configuration-processor")
 	implementation("org.postgresql", "postgresql", "42.2.6")
 	implementation("org.flywaydb:flyway-core:5.2.4")
 	implementation("org.springframework.boot", "spring-boot-starter-web", "2.1.8.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.security", "spring-security-jwt", "1.0.10.RELEASE")
 	implementation("org.springframework.security.oauth.boot", "spring-security-oauth2-autoconfigure", "2.1.7.RELEASE")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {

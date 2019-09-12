@@ -1,6 +1,13 @@
 server:
   port: 8081
 
+security:
+  jwt:
+    key-store: classpath:authservice.jks
+    key-store-password: ${KEYSTORE_PASSWORD}
+    key-pair-alias: ${KEYSTORE_ALIAS}
+    key-pair-password: ${KEYSTORE_PASSWORD}
+
 spring:
   application:
     name: authservice
@@ -10,3 +17,5 @@ spring:
     username: ${DATABASE_USER}
     password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: ${DATABASE_SCHEMA}
