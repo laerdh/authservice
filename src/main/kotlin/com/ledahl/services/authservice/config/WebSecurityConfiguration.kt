@@ -3,31 +3,43 @@ package com.ledahl.services.authservice.config
 import com.ledahl.services.authservice.service.CustomUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.core.annotation.Order
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.web.filter.CommonsRequestLoggingFilter
 
-@Configuration
-@Order(1)
+@EnableWebSecurity
 class WebSecurityConfiguration(@Autowired private val customUserDetailsService: CustomUserDetailsService): WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity?) {
         http?.requestMatchers()
-                ?.antMatchers("/login", "/oauth/authorize")
+                ?.antMatchers("/login", "/oauth/authorize", "/oauth/token")
                 ?.and()
                 ?.authorizeRequests()
                 ?.anyRequest()?.authenticated()
                 ?.and()
-                ?.formLogin()?.permitAll()
+                ?.formLogin()
     }
 
-    @Autowired
-    fun globalUserDetails(auth: AuthenticationManagerBuilder?) {
-        auth?.userDetailsService(customUserDetailsService)
-                ?.passwordEncoder(passwordEncoder())
+    @Bean
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
+    }
+
+    override fun configure(auth: AuthenticationManagerBuilder?) {
+        auth?.authenticationProvider(authProvider())
+    }
+
+    @Bean
+    fun authProvider(): AuthenticationProvider {
+        val authenticationProvider = DaoAuthenticationProvider()
+        authenticationProvider.setUserDetailsService(customUserDetailsService)
+        authenticationProvider.setPasswordEncoder(passwordEncoder())
+        return authenticationProvider
     }
 
     @Bean
@@ -36,7 +48,12 @@ class WebSecurityConfiguration(@Autowired private val customUserDetailsService: 
     }
 
     @Bean
-    override fun authenticationManagerBean(): AuthenticationManager {
-        return super.authenticationManagerBean()
+    fun requestLoggingFilter(): CommonsRequestLoggingFilter {
+        val loggingFilter = CommonsRequestLoggingFilter()
+        loggingFilter.setIncludeClientInfo(true)
+        loggingFilter.setIncludeHeaders(true)
+        loggingFilter.setIncludePayload(true)
+        loggingFilter.setIncludeQueryString(true)
+        return loggingFilter
     }
 }
