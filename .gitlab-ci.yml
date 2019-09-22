@@ -1,21 +1,49 @@
-image: gradle:5.6.2-jdk8
+image: docker:latest
+services:
+  - docker:dind
 
 stages:
   - build
+  - push
   - deploy
 
+before_script:
+  - 'which ssh-agent || ( apk update && apk add openssh-client )'
+  - mkdir -p ~/.ssh
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+  - chmod 700 ~/.ssh/id_rsa
+  - eval $(ssh-agent -s)
+  - ssh-add ~/.ssh/id_rsa
+  - ssh-keyscan -H 'ledahl.com' >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
 build:
+  image: java:8-jdk
   stage: build
   script:
-    - echo 'Starting build'
-    - gradle clean
-    - gradle bootJar
+    - ./gradlew clean
+    - ./gradlew bootJar
   artifacts:
     paths:
       - build/libs/authservice-0.0.1-SNAPSHOT.jar
 
+push:
+  stage: push
+  script:
+    - echo 'Login to docker registry'
+    - docker login -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN registry.gitlab.com
+    - echo 'Build docker image'
+    - docker build -t registry.gitlab.com/laerdh/authservice:$CI_COMMIT_SHORT_SHA .
+    - echo 'Pushing docker image to registry'
+    - docker push registry.gitlab.com/laerdh/authservice:$CI_COMMIT_SHORT_SHA
+
 deploy:
   stage: deploy
   script:
-    - echo 'Deploying to ${SSH_HOST}'
-    - scp /build/libs/authservice-0.0.1-SNAPSHOT.jar $SSH_USER@$SSH_HOST:/home/laerdh/dev/api/authservice
+    - echo 'Deploying to' $SSH_HOST
+    - ssh $SSH_USER@$SSH_HOST "/bin/bash ./dev/api/authservice/bin/deploy.sh -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN -i authservice:$CI_COMMIT_SHORT_SHA"
