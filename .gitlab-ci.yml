@@ -1,0 +1,21 @@
+image: gradle:5.6.2-jdk8
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - echo 'Starting build'
+    - gradle clean
+    - gradle bootJar
+  artifacts:
+    paths:
+      - build/libs/authservice-0.0.1-SNAPSHOT.jar
+
+deploy:
+  stage: deploy
+  script:
+    - echo 'Deploying to ${SSH_HOST}'
+    - scp /build/libs/authservice-0.0.1-SNAPSHOT.jar $SSH_USER@$SSH_HOST:/home/laerdh/dev/api/authservice
