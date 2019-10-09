@@ -26,6 +26,7 @@ build:
   image: java:8-jdk
   stage: build
   script:
+    - echo $FILE_JAVA_KEYSTORE | base64 -d > src/main/resources/authservice.jks
     - ./gradlew clean
     - ./gradlew bootJar
   artifacts:
@@ -34,6 +35,8 @@ build:
 
 push:
   stage: push
+  only:
+    - master
   script:
     - echo 'Login to docker registry'
     - docker login -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN registry.gitlab.com
@@ -44,6 +47,8 @@ push:
 
 deploy:
   stage: deploy
+  only:
+    - master
   script:
     - echo 'Deploying to' $SSH_HOST
     - ssh $SSH_USER@$SSH_HOST "/bin/bash ./dev/api/authservice/bin/deploy.sh -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN -i authservice:$CI_COMMIT_SHORT_SHA"
