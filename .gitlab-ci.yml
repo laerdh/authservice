@@ -26,6 +26,7 @@ build:
   image: java:8-jdk
   stage: build
   script:
+    - echo $FILE_JAVA_KEYSTORE | base64 -d > src/main/resources/authservice.jks
     - ./gradlew clean
     - ./gradlew bootJar
   artifacts:
