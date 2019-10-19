@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "2.1.8.RELEASE"
+	id("org.springframework.boot") version "2.1.9.RELEASE"
 	id("io.spring.dependency-management") version "1.0.8.RELEASE"
 	id("org.flywaydb.flyway") version "5.2.4"
 	kotlin("jvm") version "1.3.50"
@@ -25,10 +25,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-configuration-processor")
 	implementation("org.postgresql", "postgresql", "42.2.6")
 	implementation("org.flywaydb:flyway-core:5.2.4")
-	implementation("org.springframework.boot", "spring-boot-starter-web", "2.1.8.RELEASE")
+	implementation("org.springframework.boot", "spring-boot-starter-web", "2.1.9.RELEASE")
+	implementation("org.springframework.boot", "spring-boot-starter-thymeleaf", "2.1.9.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.security", "spring-security-jwt", "1.0.10.RELEASE")
-	implementation("org.springframework.security.oauth.boot", "spring-security-oauth2-autoconfigure", "2.1.7.RELEASE")
+	implementation("org.springframework.security.oauth.boot", "spring-security-oauth2-autoconfigure", "2.1.9.RELEASE")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")

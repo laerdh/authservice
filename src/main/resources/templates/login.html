@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Please Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, min-width=320px">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/b38fc4a595.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="login-box">
+            <div class="login-box-header">
+                <p>Please log in to access Ledahl resources</p>
+                <div class="login-box-error" th:if="${param.error != null}">
+                    <p>Bad credentials</p>
+                </div>
+            </div>
+            <form name="login" th:action="@{/login}" method="POST">
+                <div class="login-box-field">
+                    <div class="input-container">
+                        <i class="far fa-user"></i>
+                        <input class="input-field" type="email" id="username" placeholder="Username" name="username" />
+                    </div>
+                    <div class="input-container">
+                        <i class="fas fa-lock"></i>
+                        <input class="input-field" type="password" id="password" placeholder="Password" name="password" />
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </div>
+            </form>
+            <div class="login-box-footer">
+                <div class="login-box-divider">
+                    <div class="login-box-divider-box">
+                        <p>or</p>
+                    </div>
+                </div>
+                <p>Sign in with</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
