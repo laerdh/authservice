@@ -63,6 +63,18 @@ html {
     margin: 0;
 }
 
+.login-box-top-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+    color: white;
+    border-radius: 50%;
+    padding: 4px;
+    background: dodgerblue;
+}
+
 .login-box-field {
     display: flex;
     flex-direction: column;
