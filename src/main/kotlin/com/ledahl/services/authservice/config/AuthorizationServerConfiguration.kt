@@ -12,6 +12,12 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer
+import org.springframework.security.oauth2.provider.ClientDetailsService
+import org.springframework.security.oauth2.provider.approval.ApprovalStore
+import org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler
+import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore
+import org.springframework.security.oauth2.provider.approval.UserApprovalHandler
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices
 import org.springframework.security.oauth2.provider.token.TokenStore
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
@@ -26,6 +32,7 @@ class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSo
                                        @Autowired private val passwordEncoder: BCryptPasswordEncoder,
                                        @Autowired private val authenticationConfiguration: AuthenticationConfiguration,
                                        @Autowired private val jwtProperties: JwtProperties): AuthorizationServerConfigurerAdapter() {
+
     override fun configure(security: AuthorizationServerSecurityConfigurer?) {
         security
                 ?.tokenKeyAccess("permitAll()")
@@ -37,6 +44,7 @@ class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSo
         endpoints?.authenticationManager(authenticationConfiguration.authenticationManager)
                 ?.tokenServices(tokenServices())
                 ?.accessTokenConverter(accessTokenConverter())
+                ?.userApprovalHandler(userApprovalHandler(endpoints.clientDetailsService))
                 ?.tokenEnhancer(accessTokenConverter())
     }
 
@@ -66,5 +74,24 @@ class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSo
         defaultTokenServices.setSupportRefreshToken(true)
         defaultTokenServices.setTokenEnhancer(accessTokenConverter())
         return defaultTokenServices
+    }
+
+    @Bean
+    fun userApprovalHandler(clientDetailsService: ClientDetailsService): UserApprovalHandler {
+        val userApprovalHandler = ApprovalStoreUserApprovalHandler()
+        userApprovalHandler.setApprovalStore(approvalStore())
+        userApprovalHandler.setClientDetailsService(clientDetailsService)
+        userApprovalHandler.setRequestFactory(requestFactory(clientDetailsService))
+        return userApprovalHandler
+    }
+
+    @Bean
+    fun approvalStore(): ApprovalStore {
+        return JdbcApprovalStore(dataSource)
+    }
+
+    @Bean
+    fun requestFactory(clientDetailsService: ClientDetailsService): DefaultOAuth2RequestFactory {
+        return DefaultOAuth2RequestFactory(clientDetailsService)
     }
 }
