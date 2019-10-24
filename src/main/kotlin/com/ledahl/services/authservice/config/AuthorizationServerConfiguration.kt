@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.oauth2.config.annotation.builders.JdbcClientDetailsServiceBuilder
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer
@@ -44,12 +45,20 @@ class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSo
         endpoints?.authenticationManager(authenticationConfiguration.authenticationManager)
                 ?.tokenServices(tokenServices())
                 ?.accessTokenConverter(accessTokenConverter())
-                ?.userApprovalHandler(userApprovalHandler(endpoints.clientDetailsService))
+                ?.userApprovalHandler(userApprovalHandler())
                 ?.tokenEnhancer(accessTokenConverter())
     }
 
     override fun configure(clients: ClientDetailsServiceConfigurer?) {
-        clients?.jdbc(dataSource)?.passwordEncoder(passwordEncoder)?.build()
+        clients?.withClientDetails(jdbcClientDetailsService())
+    }
+
+    @Bean
+    fun jdbcClientDetailsService(): ClientDetailsService {
+        return JdbcClientDetailsServiceBuilder()
+                .dataSource(dataSource)
+                .passwordEncoder(passwordEncoder)
+                .build()
     }
 
     @Bean
@@ -77,11 +86,11 @@ class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSo
     }
 
     @Bean
-    fun userApprovalHandler(clientDetailsService: ClientDetailsService): UserApprovalHandler {
+    fun userApprovalHandler(): UserApprovalHandler {
         val userApprovalHandler = ApprovalStoreUserApprovalHandler()
         userApprovalHandler.setApprovalStore(approvalStore())
-        userApprovalHandler.setClientDetailsService(clientDetailsService)
-        userApprovalHandler.setRequestFactory(requestFactory(clientDetailsService))
+        userApprovalHandler.setClientDetailsService(jdbcClientDetailsService())
+        userApprovalHandler.setRequestFactory(requestFactory(jdbcClientDetailsService()))
         return userApprovalHandler
     }
 
