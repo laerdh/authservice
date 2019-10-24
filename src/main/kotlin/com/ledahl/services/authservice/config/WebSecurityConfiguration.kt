@@ -25,8 +25,6 @@ class WebSecurityConfiguration(@Autowired private val customUserDetailsService: 
                     ?.usernameParameter("username")
                     ?.passwordParameter("password")
                     ?.permitAll()
-                ?.and()
-                ?.csrf()?.disable()
     }
     
     @Bean
