@@ -1,6 +1,6 @@
 /* Media queries */
 @media screen and (max-width: 650px) {
-    .login-box {
+    .box {
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -14,7 +14,7 @@
 }
 
 @media screen and (min-width: 650px) {
-    .login-box {
+    .box {
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -66,7 +66,7 @@ html {
     margin: 0;
 }
 
-.login-box-top-icon {
+.box-top-icon {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -117,7 +117,7 @@ html {
     margin-top: 16px;
 }
 
-.login-box-field button[type=submit] {
+.btn {
     height: 48px;
     background: dodgerblue;
     border-radius: 3px;
@@ -191,4 +191,71 @@ html {
 
 .error-box-icon {
     color: dodgerblue;
+}
+
+/* Confirm access */
+.confirm-box-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #666;
+}
+
+.confirm-box-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px 0 16px;
+}
+
+.confirm-box-item-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 0 8px 0;
+}
+
+.confirm-box-item-row i {
+    color: dodgerblue;
+}
+
+.confirm-box-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px 0 8px;
+}
+
+.confirm-box-item p {
+    margin: 0;
+}
+
+.confirm-box-form-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 24px 0 0 0;
+}
+
+.confirm-box-input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.btn-success {
+    height: 48px;
+    color: white;
+    background: dodgerblue;
+    border: none;
+    border-radius: 3px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.btn-deny {
+    height: 48px;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    font-size: 0.9em;
+    cursor: pointer;
 }

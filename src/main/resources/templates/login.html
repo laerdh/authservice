@@ -9,17 +9,17 @@
 </head>
 <body>
     <div class="wrapper">
-        <div class="login-box">
+        <div class="box">
             <div class="login-box-header">
-                <div class="login-box-top-icon">
-                    <i class="fas fa-user-lock fa-2x"></i>
+                <div class="box-top-icon">
+                    <i class="fas fa-lock fa-2x"></i>
                 </div>
                 <p>Please log in to access Ledahl resources</p>
                 <div class="login-box-error" th:if="${param.error != null}">
                     <p>Bad credentials</p>
                 </div>
             </div>
-            <form name="login" th:action="@{/login}" method="POST">
+            <form id="loginForm" name="login" th:action="@{/login}" method="post">
                 <div class="login-box-field">
                     <div class="input-container">
                         <i class="fas fa-user"></i>

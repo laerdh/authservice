@@ -1,12 +1,58 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Authorize client | Ledahl</title>
+    <title>Confirm access | Ledahl</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/b38fc4a595.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>Oauth2 authorize client view!</h1>
+    <div class="wrapper">
+        <div class="box">
+            <div class="confirm-box-header">
+                <div class="box-top-icon">
+                    <i class="fas fa-link fa-2x"></i>
+                </div>
+                <h1 id="confirm-box-title" th:text="|Authorize ${client_id}|"></h1>
+            </div>
+            <div class="confirm-box-content">
+                <div class="confirm-box-item-row" th:if="${username != null}">
+                    <i class="fas fa-user-circle fa-2x"></i>
+                    <div class="confirm-box-item">
+                        <p>
+                            <span style="font-weight: bold;" th:text="${client_id}"></span>
+                            <span th:if="${additional_information != null && additional_information.provider != null}"> by <a th:href="${additional_information.provider.url}"><span style="font-weight: bold;" th:text="${additional_information.provider.name}"></span></a></span>
+                        </p>
+                        <p>wants to access your <span style="font-weight: bold;" th:text="${username}"></span> account</p>
+                    </div>
+                </div>
+                <div class="confirm-box-item-row">
+                    <i class="fas fa-info-circle fa-2x"></i>
+                    <div class="confirm-box-item">
+                        <p><b>Personal user data</b></p>
+                        <div th:if="${scope != null}" th:each="s : ${scope}">
+                            <p th:text="${s}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="confirm-box-form-content">
+                    <form id="confirmationForm" class="confirm-box-input-container" name="confirmationForm" th:action="@{/oauth/authorize}" method="post">
+                        <input name="user_oauth_approval" value="true" type="hidden"/>
+                        <div th:if="${scope != null}">
+                            <input th:each="s : ${scope}" th:name="|scope.${s}|" value="true" type="hidden" />
+                        </div>
+                        <button type="submit" class="btn-success" name="authorize" value="true">Authorize</button>
+                    </form>
+                    <form id="denialForm" class="confirm-box-input-container" name="denialForm" th:action="@{/oauth/authorize}" method="post">
+                        <input name="user_oauth_approval" value="true" type="hidden"/>
+                        <div th:if="${scope != null}">
+                            <input th:each="s : ${scope}" th:name="|scope.${s}|" value="false" type="hidden" />
+                        </div>
+                        <button type="submit" class="btn-deny" name="deny" value="false">Deny</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
