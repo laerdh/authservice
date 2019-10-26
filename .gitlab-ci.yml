@@ -14,7 +14,7 @@ before_script:
   - chmod 700 ~/.ssh/id_rsa
   - eval $(ssh-agent -s)
   - ssh-add ~/.ssh/id_rsa
-  - ssh-keyscan -H 'ledahl.com' >> ~/.ssh/known_hosts
+  - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 
 cache:
@@ -41,9 +41,9 @@ push:
     - echo 'Login to docker registry'
     - docker login -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN registry.gitlab.com
     - echo 'Build docker image'
-    - docker build -t registry.gitlab.com/laerdh/authservice:$CI_COMMIT_SHORT_SHA .
+    - docker build -t $GITLAB_REGISTRY_URL:$CI_COMMIT_SHORT_SHA .
     - echo 'Pushing docker image to registry'
-    - docker push registry.gitlab.com/laerdh/authservice:$CI_COMMIT_SHORT_SHA
+    - docker push $GITLAB_REGISTRY_URL:$CI_COMMIT_SHORT_SHA
 
 deploy:
   stage: deploy
@@ -51,4 +51,4 @@ deploy:
     - master
   script:
     - echo 'Deploying to' $SSH_HOST
-    - ssh $SSH_USER@$SSH_HOST "/bin/bash ./dev/api/authservice/bin/deploy.sh -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN -i authservice:$CI_COMMIT_SHORT_SHA"
+    - ssh $SSH_USER@$SSH_HOST "/bin/bash ./dev/api/authservice/bin/deploy.sh -r $GITLAB_REGISTRY_USER -t $GITLAB_REGISTRY_TOKEN -i authservice:$CI_COMMIT_SHORT_SHA -u $DATABASE_USER -d $DATABASE_PASSWORD -p $KEYSTORE_PASSWORD -a $KEYSTORE_ALIAS"
