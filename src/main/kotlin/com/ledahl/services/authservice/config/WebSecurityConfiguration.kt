@@ -17,7 +17,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter
 class WebSecurityConfiguration(@Autowired private val customUserDetailsService: CustomUserDetailsService): WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity?) {
         http?.authorizeRequests()
-                    ?.antMatchers("/login", "/error", "/css/**", "/oauth/authorize")?.permitAll()
+                    ?.antMatchers("/login", "/error", "/css/**")?.permitAll()
                 ?.anyRequest()?.authenticated()
                 ?.and()
                 ?.formLogin()
