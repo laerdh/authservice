@@ -36,7 +36,8 @@ build:
 push:
   stage: push
   only:
-    - master
+    refs:
+      - master
   script:
     - echo 'Login to docker registry'
     - docker login -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN registry.gitlab.com
@@ -48,7 +49,8 @@ push:
 deploy:
   stage: deploy
   only:
-    - master
+    refs:
+      - master
   script:
     - echo 'Deploying to' $SSH_HOST
-    - ssh $SSH_USER@$SSH_HOST "/bin/bash ./dev/api/authservice/bin/deploy.sh -r $GITLAB_REGISTRY_USER -t $GITLAB_REGISTRY_TOKEN -i authservice:$CI_COMMIT_SHORT_SHA -u $DATABASE_USER -d $DATABASE_PASSWORD -p $KEYSTORE_PASSWORD -a $KEYSTORE_ALIAS"
+    - ssh $SSH_USER@$SSH_HOST "/bin/bash $SSH_DEPLOY_SCRIPT -r $GITLAB_REGISTRY_USER -t $GITLAB_REGISTRY_TOKEN -i authservice:$CI_COMMIT_SHORT_SHA -u $DATABASE_USER -d $DATABASE_PASSWORD -p $KEYSTORE_PASSWORD -a $KEYSTORE_ALIAS"
