@@ -1,5 +1,6 @@
 package com.ledahl.services.authservice.repository
 
+import com.ledahl.services.authservice.model.AuthMethod
 import com.ledahl.services.authservice.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
@@ -20,11 +21,13 @@ class UserRepository(@Autowired private val jdbcTemplate: JdbcTemplate) {
             namedTemplate.queryForObject("SELECT * FROM users WHERE email = :username", parameters) { rs, _ ->
                 User(
                         id = rs.getLong("id"),
+                        externalId = rs.getString("external_id"),
                         firstName = rs.getString("first_name"),
                         lastName = rs.getString("last_name"),
                         email = rs.getString("email"),
                         password = rs.getString("password"),
                         phoneNumber = rs.getString("phone_number"),
+                        authMethod = AuthMethod.valueOf(rs.getString("auth_method")),
                         enabled = rs.getBoolean("enabled")
                 )
             }

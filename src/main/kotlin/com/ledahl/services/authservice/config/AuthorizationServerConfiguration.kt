@@ -117,6 +117,7 @@ class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSo
             val userDetails = authentication.userAuthentication?.principal as? CustomUserDetail
             userDetails?.let {
                 val additionalInfo = HashMap<String, Any>()
+                additionalInfo[Constants.JWT_CLAIM_USER_ID] = it.user.externalId
                 additionalInfo[Constants.JWT_CLAIM_FIRST_NAME] = it.user.firstName
                 additionalInfo[Constants.JWT_CLAIM_LAST_NAME] = it.user.lastName
                 (accessToken as? DefaultOAuth2AccessToken)?.additionalInformation = additionalInfo

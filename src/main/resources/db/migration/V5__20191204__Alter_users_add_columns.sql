@@ -1,0 +1,3 @@
+ALTER TABLE users
+    ADD COLUMN external_id UUID NOT NULL DEFAULT uuid_generate_v4(),
+    ADD COLUMN auth_method AUTHENTICATION_METHOD NOT NULL DEFAULT 'EMAIL';
