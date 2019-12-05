@@ -1,6 +1,6 @@
 package com.ledahl.services.authservice.config
 
-import com.ledahl.services.authservice.model.CustomUserDetail
+import com.ledahl.services.authservice.config.token.CustomTokenEnhancer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Primary
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken
 import org.springframework.security.oauth2.config.annotation.builders.JdbcClientDetailsServiceBuilder
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter
@@ -23,7 +22,6 @@ import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices
-import org.springframework.security.oauth2.provider.token.TokenEnhancer
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain
 import org.springframework.security.oauth2.provider.token.TokenStore
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
@@ -38,6 +36,7 @@ class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSo
                                        @Autowired private val passwordEncoder: BCryptPasswordEncoder,
                                        @Autowired private val authenticationConfiguration: AuthenticationConfiguration,
                                        @Autowired private val userDetailsService: UserDetailsService,
+                                       @Autowired private val customTokenEnhancer: CustomTokenEnhancer,
                                        @Autowired private val jwtProperties: JwtProperties): AuthorizationServerConfigurerAdapter() {
 
     override fun configure(security: AuthorizationServerSecurityConfigurer?) {
@@ -49,7 +48,7 @@ class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSo
 
     override fun configure(endpoints: AuthorizationServerEndpointsConfigurer?) {
         val tokenEnhancerChain = TokenEnhancerChain()
-        tokenEnhancerChain.setTokenEnhancers(listOf(tokenEnhancer(), accessTokenConverter()))
+        tokenEnhancerChain.setTokenEnhancers(listOf(customTokenEnhancer, accessTokenConverter()))
 
         endpoints?.authenticationManager(authenticationConfiguration.authenticationManager)
                 ?.userDetailsService(userDetailsService)
@@ -110,19 +109,5 @@ class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSo
     @Bean
     fun requestFactory(clientDetailsService: ClientDetailsService): DefaultOAuth2RequestFactory {
         return DefaultOAuth2RequestFactory(clientDetailsService)
-    }
-
-    private fun tokenEnhancer(): TokenEnhancer {
-        return TokenEnhancer { accessToken, authentication ->
-            val userDetails = authentication.userAuthentication?.principal as? CustomUserDetail
-            userDetails?.let {
-                val additionalInfo = HashMap<String, Any>()
-                additionalInfo[Constants.JWT_CLAIM_USER_ID] = it.user.externalId
-                additionalInfo[Constants.JWT_CLAIM_FIRST_NAME] = it.user.firstName
-                additionalInfo[Constants.JWT_CLAIM_LAST_NAME] = it.user.lastName
-                (accessToken as? DefaultOAuth2AccessToken)?.additionalInformation = additionalInfo
-            }
-            accessToken
-        }
     }
 }
