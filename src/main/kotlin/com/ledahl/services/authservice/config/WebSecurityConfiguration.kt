@@ -1,11 +1,9 @@
 package com.ledahl.services.authservice.config
 
-import com.ledahl.services.authservice.service.CustomUserDetailsService
+import com.ledahl.services.authservice.authprovider.PhoneAuthenticationProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.AuthenticationProvider
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -14,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.filter.CommonsRequestLoggingFilter
 
 @EnableWebSecurity
-class WebSecurityConfiguration(@Autowired private val customUserDetailsService: CustomUserDetailsService): WebSecurityConfigurerAdapter() {
+class WebSecurityConfiguration(@Autowired private val phoneAuthProvider: PhoneAuthenticationProvider): WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity?) {
         http?.authorizeRequests()
                     ?.antMatchers("/login", "/error", "/css/**")?.permitAll()
@@ -33,15 +31,7 @@ class WebSecurityConfiguration(@Autowired private val customUserDetailsService: 
     }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth?.authenticationProvider(authProvider())
-    }
-
-    @Bean
-    fun authProvider(): AuthenticationProvider {
-        val authenticationProvider = DaoAuthenticationProvider()
-        authenticationProvider.setUserDetailsService(customUserDetailsService)
-        authenticationProvider.setPasswordEncoder(passwordEncoder())
-        return authenticationProvider
+        auth?.authenticationProvider(phoneAuthProvider)
     }
 
     @Bean

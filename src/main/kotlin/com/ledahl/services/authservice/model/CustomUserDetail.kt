@@ -14,7 +14,7 @@ data class CustomUserDetail(val user: User): UserDetails {
     }
 
     override fun getUsername(): String {
-        return user.email
+        return user.phoneNumber
     }
 
     override fun isCredentialsNonExpired(): Boolean {
@@ -22,7 +22,7 @@ data class CustomUserDetail(val user: User): UserDetails {
     }
 
     override fun getPassword(): String {
-        return user.password
+        return user.firebaseId
     }
 
     override fun isAccountNonExpired(): Boolean {

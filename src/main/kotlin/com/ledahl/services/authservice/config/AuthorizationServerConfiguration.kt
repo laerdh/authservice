@@ -1,13 +1,13 @@
 package com.ledahl.services.authservice.config
 
 import com.ledahl.services.authservice.config.token.CustomTokenEnhancer
+import com.ledahl.services.authservice.service.CustomUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.oauth2.config.annotation.builders.JdbcClientDetailsServiceBuilder
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer
@@ -35,7 +35,7 @@ import javax.sql.DataSource
 class AuthorizationServerConfiguration(@Autowired private val dataSource: DataSource,
                                        @Autowired private val passwordEncoder: BCryptPasswordEncoder,
                                        @Autowired private val authenticationConfiguration: AuthenticationConfiguration,
-                                       @Autowired private val userDetailsService: UserDetailsService,
+                                       @Autowired private val userDetailsService: CustomUserDetailsService,
                                        @Autowired private val customTokenEnhancer: CustomTokenEnhancer,
                                        @Autowired private val jwtProperties: JwtProperties): AuthorizationServerConfigurerAdapter() {
 

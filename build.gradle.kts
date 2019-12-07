@@ -30,6 +30,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.security", "spring-security-jwt", "1.0.10.RELEASE")
 	implementation("org.springframework.security.oauth.boot", "spring-security-oauth2-autoconfigure", "2.1.9.RELEASE")
+	implementation( "com.google.firebase:firebase-admin:6.11.0")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
