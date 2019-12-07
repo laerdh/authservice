@@ -27,6 +27,9 @@ build:
   stage: build
   script:
     - echo $FILE_JAVA_KEYSTORE | base64 -d > src/main/resources/authservice.jks
+    - mkdir src/main/resources/config
+    - touch src/main/resources/config/$FIREBASE_ACCOUNT_FILE
+    - echo $FIREBASE_SERVICE_ACCOUNT >> src/main/resources/config/$FIREBASE_ACCOUNT_FILE
     - ./gradlew clean
     - ./gradlew bootJar
   artifacts:
