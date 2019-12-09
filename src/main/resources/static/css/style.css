@@ -6,10 +6,7 @@
         flex-wrap: nowrap;
         min-width: 320px;
         margin-top: 50px;
-        border-radius: 10px;
-        background: white;
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20);
-        padding: 32px 0 32px 0;
+        padding: 16px;
     }
 }
 
@@ -18,11 +15,8 @@
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
-        min-width: 500px;
+        min-width: 320px;
         margin-top: 50px;
-        border-radius: 10px;
-        background: white;
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20);
         padding: 32px;
     }
 }
@@ -50,6 +44,7 @@ html {
     justify-content: center;
     align-items: center;
     color: #666;
+    margin-bottom: 1em;
 }
 
 .login-box-error {
@@ -76,108 +71,6 @@ html {
     border-radius: 50%;
     padding: 4px;
     background: dodgerblue;
-}
-
-.login-box-field {
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-}
-
-.input-container {
-    display: flex;
-}
-
-.input-container i {
-    display: flex;
-    width: 48px;
-    justify-content: center;
-    align-items: center;
-    background: dodgerblue;
-    border-radius: 3px;
-    color: white;
-}
-
-.input-field {
-    width: 100%;
-    height: 24px;
-    border-radius: 3px;
-    border: 1px solid #babec2;
-    outline: none;
-    padding: 8px;
-    font-size: 0.95em;
-}
-
-.input-field:focus {
-    border: 2px solid dodgerblue;
-    padding: 7px;
-}
-
-.input-container:last-of-type {
-    margin-top: 16px;
-}
-
-.btn {
-    height: 48px;
-    background: dodgerblue;
-    border-radius: 3px;
-    border: none;
-    color: white;
-    margin-top: 32px;
-    font-size: 1.2em;
-    cursor: pointer;
-}
-
-.login-box-input {
-    display: flex;
-    position: relative;
-}
-
-.login-box-input > i {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.login-box-divider {
-    position: relative;
-    height: 1px;
-    background: #babec2;
-}
-
-.login-box-divider-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 24px;
-    height: 24px;
-    margin-left: -14px;
-    padding: 4px;
-    background: white;
-    border-radius: 50%;
-    border: 1px solid #babec2;
-    transform: translateY(-50%);
-}
-
-.login-box-divider-box > p {
-    margin: 0;
-    color: black;
-}
-
-.login-box-footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    justify-items: center;
-    padding: 0 16px 0 16px;
-}
-
-.login-box-footer > p {
-    margin: 32px 0 0 0;
-    text-align: center;
 }
 
 /* Error */

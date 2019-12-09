@@ -17,6 +17,7 @@ class WebMvcConfiguration: WebMvcConfigurer {
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/")
         registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/")
     }
 }

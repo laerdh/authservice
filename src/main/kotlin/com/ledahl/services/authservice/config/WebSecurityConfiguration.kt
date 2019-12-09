@@ -15,7 +15,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter
 class WebSecurityConfiguration(@Autowired private val phoneAuthProvider: PhoneAuthenticationProvider): WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity?) {
         http?.authorizeRequests()
-                    ?.antMatchers("/login", "/error", "/css/**")?.permitAll()
+                    ?.antMatchers("/login", "/error", "/css/**", "/js/**")?.permitAll()
                 ?.anyRequest()?.authenticated()
                 ?.and()
                 ?.formLogin()

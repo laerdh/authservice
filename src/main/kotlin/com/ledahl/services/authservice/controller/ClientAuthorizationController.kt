@@ -1,4 +1,4 @@
-package com.ledahl.services.authservice.config.controller
+package com.ledahl.services.authservice.controller
 
 import com.ledahl.services.authservice.model.CustomUserDetail
 import org.springframework.beans.factory.annotation.Autowired
